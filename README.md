@@ -16,7 +16,7 @@ A personal portfolio site for Priyam Singh, a Java Full-Stack Developer. Built t
 ### Prerequisites
 
 - [Bun](https://bun.sh/) (recommended) or Node.js 20+
-- A Lovable Cloud / Supabase project with the required environment variables
+- A Supabase project with the required environment variables
 
 ### Installation
 
