@@ -31,13 +31,7 @@ function HeadlineWords({ text, reduced }: { text: string; reduced: boolean }) {
   );
 }
 
-export function Hero({
-  profile,
-  resume,
-}: {
-  profile: Profile | null;
-  resume: Resume | null;
-}) {
+export function Hero({ profile, resume }: { profile: Profile | null; resume: Resume | null }) {
   const reduced = useReducedMotion() ?? false;
   const press = usePress();
   const fade = (delay: number) => ({
@@ -109,8 +103,27 @@ export function Hero({
           initial={{ opacity: 0, y: reduced ? 0 : 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...transition, delay: reduced ? 0 : 0.3 }}
+          className="relative"
         >
           <HeroVisual />
+          {profile?.avatarUrl && (
+            <motion.div
+              {...fade(0.75)}
+              className="absolute -bottom-4 -left-4 flex items-center gap-3 rounded-full border border-border bg-surface/90 py-1.5 pl-1.5 pr-4 shadow-lg backdrop-blur-sm"
+            >
+              <img
+                src={profile.avatarUrl}
+                alt={profile.fullName ?? "Profile photo"}
+                width={40}
+                height={40}
+                className="size-10 rounded-full border border-accent/40 object-cover"
+                loading="eager"
+              />
+              <span className="text-small font-medium text-foreground">
+                {profile.fullName ?? "Hi, I'm here"}
+              </span>
+            </motion.div>
+          )}
         </motion.div>
       </div>
 
