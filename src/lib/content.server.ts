@@ -11,17 +11,13 @@ import {
 } from "./content";
 
 function client() {
-  return createClient(
-    process.env["SUPABASE_URL"]!,
-    process.env["SUPABASE_PUBLISHABLE_KEY"]!,
-    {
-      auth: {
-        storage: undefined,
-        persistSession: false,
-        autoRefreshToken: false,
-      },
+  return createClient(process.env["SUPABASE_URL"]!, process.env["SUPABASE_PUBLISHABLE_KEY"]!, {
+    auth: {
+      storage: undefined,
+      persistSession: false,
+      autoRefreshToken: false,
     },
-  );
+  });
 }
 
 function unwrap<T>(res: { data: T | null; error: { message: string } | null }): T {
@@ -60,43 +56,39 @@ const PROJECT_COLUMNS =
 
 export async function fetchHomeData() {
   const db = client();
-  const [profile, projects, skills, experience, socials, resume, total] =
-    await Promise.all([
-      db.from("profile").select("*").limit(1).maybeSingle(),
-      db
-        .from("projects")
-        .select(PROJECT_COLUMNS)
-        .eq("is_published", true)
-        .eq("is_featured", true)
-        .order("display_order", { ascending: true })
-        .limit(3),
-      db
-        .from("skills")
-        .select("name,category,proficiency,icon_key")
-        .eq("is_published", true)
-        .order("display_order", { ascending: true }),
-      db
-        .from("experience")
-        .select("id,company,role,location,start_date,end_date,description,stack_tags")
-        .eq("is_published", true)
-        .order("display_order", { ascending: true })
-        .limit(3),
-      db
-        .from("social_links")
-        .select("platform,url")
-        .eq("is_published", true)
-        .order("display_order", { ascending: true }),
-      db
-        .from("resume_versions")
-        .select("file_url,version_label,file_size_label")
-        .eq("is_active", true)
-        .limit(1)
-        .maybeSingle(),
-      db
-        .from("projects")
-        .select("slug", { count: "exact", head: true })
-        .eq("is_published", true),
-    ]);
+  const [profile, projects, skills, experience, socials, resume, total] = await Promise.all([
+    db.from("profile").select("*").limit(1).maybeSingle(),
+    db
+      .from("projects")
+      .select(PROJECT_COLUMNS)
+      .eq("is_published", true)
+      .eq("is_featured", true)
+      .order("display_order", { ascending: true })
+      .limit(3),
+    db
+      .from("skills")
+      .select("name,category,proficiency,icon_key")
+      .eq("is_published", true)
+      .order("display_order", { ascending: true }),
+    db
+      .from("experience")
+      .select("id,company,role,location,start_date,end_date,description,stack_tags")
+      .eq("is_published", true)
+      .order("display_order", { ascending: true })
+      .limit(3),
+    db
+      .from("social_links")
+      .select("platform,url")
+      .eq("is_published", true)
+      .order("display_order", { ascending: true }),
+    db
+      .from("resume_versions")
+      .select("file_url,version_label,file_size_label")
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle(),
+    db.from("projects").select("slug", { count: "exact", head: true }).eq("is_published", true),
+  ]);
 
   if (profile.error) throw new Error(profile.error.message);
   if (resume.error) throw new Error(resume.error.message);
@@ -120,6 +112,16 @@ export async function fetchProjectsData() {
     .eq("is_published", true)
     .order("display_order", { ascending: true });
   return { projects: unwrap<any[]>(res).map(mapProject) };
+}
+
+export async function fetchSocialLinks() {
+  const db = client();
+  const res = await db
+    .from("social_links")
+    .select("platform,url")
+    .eq("is_published", true)
+    .order("display_order", { ascending: true });
+  return { socials: mapSocials(unwrap<any[]>(res)) };
 }
 
 export async function fetchProjectDetail(slug: string) {

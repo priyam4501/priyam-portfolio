@@ -1,21 +1,16 @@
 import type { Role } from "@/lib/content";
+import { Reveal, RevealItem } from "@/components/motion/reveal";
 
 function TimelineItem({ role, isLast }: { role: Role; isLast: boolean }) {
   return (
-    <li className="relative pl-8">
+    <RevealItem as="li" className="relative pl-8">
       {/* Node */}
-      <span
-        aria-hidden
-        className="absolute left-0 top-1.5 flex size-3 items-center justify-center"
-      >
+      <span aria-hidden className="absolute left-0 top-1.5 flex size-3 items-center justify-center">
         <span className="size-3 rounded-full border-2 border-accent bg-background" />
       </span>
       {/* Connector line */}
       {!isLast && (
-        <span
-          aria-hidden
-          className="absolute bottom-0 left-[5px] top-5 w-px bg-border"
-        />
+        <span aria-hidden className="absolute bottom-0 left-[5px] top-5 w-px bg-border" />
       )}
 
       <div className="pb-10">
@@ -31,10 +26,7 @@ function TimelineItem({ role, isLast }: { role: Role; isLast: boolean }) {
 
         <ul className="mt-4 space-y-2">
           {role.highlights.map((h, i) => (
-            <li
-              key={i}
-              className="flex gap-3 text-small leading-relaxed text-muted-foreground"
-            >
+            <li key={i} className="flex gap-3 text-small leading-relaxed text-muted-foreground">
               <span aria-hidden className="mt-2 size-1 shrink-0 rounded-full bg-accent/60" />
               <span>{h}</span>
             </li>
@@ -52,16 +44,16 @@ function TimelineItem({ role, isLast }: { role: Role; isLast: boolean }) {
           ))}
         </div>
       </div>
-    </li>
+    </RevealItem>
   );
 }
 
 export function Timeline({ roles }: { roles: Role[] }) {
   return (
-    <ol>
+    <Reveal as="ol" stagger={0.12}>
       {roles.map((role, i) => (
         <TimelineItem key={role.id} role={role} isLast={i === roles.length - 1} />
       ))}
-    </ol>
+    </Reveal>
   );
 }

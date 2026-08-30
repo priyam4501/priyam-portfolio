@@ -109,19 +109,22 @@ export function Hero({ profile, resume }: { profile: Profile | null; resume: Res
           {profile?.avatarUrl && (
             <motion.div
               {...fade(0.75)}
-              className="absolute -bottom-4 -left-4 flex items-center gap-3 rounded-full border border-border bg-surface/90 py-1.5 pl-1.5 pr-4 shadow-lg backdrop-blur-sm"
+              className="absolute -bottom-8 -left-8 flex items-center gap-4 rounded-full border-2 border-accent/50 bg-surface py-2.5 pl-2.5 pr-7 shadow-2xl backdrop-blur-md"
             >
               <img
                 src={profile.avatarUrl}
                 alt={profile.fullName ?? "Profile photo"}
-                width={40}
-                height={40}
-                className="size-10 rounded-full border border-accent/40 object-cover"
+                width={112}
+                height={112}
+                className="size-28 rounded-full border-[3px] border-accent object-cover object-top"
                 loading="eager"
               />
-              <span className="text-small font-medium text-foreground">
-                {profile.fullName ?? "Hi, I'm here"}
-              </span>
+              <div>
+                <p className="text-h4 font-semibold text-foreground">
+                  {profile.fullName ?? "Hi, I'm here"}
+                </p>
+                {profile.title && <p className="label-mono mt-1 text-[0.7rem]">{profile.title}</p>}
+              </div>
             </motion.div>
           )}
         </motion.div>

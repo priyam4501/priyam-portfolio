@@ -21,18 +21,5 @@ export default defineConfig({
   // Pin the Nitro preset to Vercel for self-hosted deployments.
   // Lovable-managed builds ignore this override and continue to use the
   // Cloudflare preset, so the preview is unaffected.
-  nitro: {
-    preset: "vercel",
-    // The 3D hero scene (three.js / @react-three/fiber) is lazy-loaded
-    // client-only and never rendered during SSR — see hero-visual.tsx's
-    // mount guard. Without this, Nitro's server-function bundler still
-    // statically traces the lazy() import and bundles the full three.js
-    // dependency graph (~430KB gzipped) into the server function for no
-    // reason, since that code path never executes there. Nitro's own
-    // externals (not Vite's ssr.external) is what actually controls the
-    // server function bundle here.
-    externals: {
-      external: ["three", "@react-three/fiber"],
-    },
-  },
+  nitro: { preset: "vercel" },
 });
